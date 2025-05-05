@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}PDA leht{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <h2>Data info</h2>
+   <a class="link" href="{{ url_for('pda') }}">Summary</a>
+        <div>
+        <pre>
+            {% for line in info_data %}
+                {{ line }}
+            {% endfor %}
+        </pre>
+        </div>
+    </div>
+{% endblock %}
