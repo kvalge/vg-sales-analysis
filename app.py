@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 
-from analysis.sales import (sales_by_year)
+from analysis.sales import (sales_by_year, top_publishers_action_na_sales, top_20_action_games_na_sales)
 from analysis.eda import (get_shape, get_info, get_head, get_describe, get_unique_counts)
 from analysis.chart_generation import *
 
@@ -42,10 +42,21 @@ def graphs():
 @app.route('/sales')
 def sales():
     sales_data, total_row = sales_by_year()
+    publishers_data = top_publishers_action_na_sales()
+    action_publisher_data = top_20_action_games_na_sales()
+    top_20_action_games = top_20_action_games_na_sales()
+
     get_sales_by_year_linechart()
     get_sales_by_publisher_barchart()
-    return render_template('sales.html', sales_data=sales_data, total_row=total_row)
+    get_sales_by_genre_barchart()
+    na_sales_by_genre_over_time_top7_barchart()
 
+    return render_template('sales.html',
+                           sales_data=sales_data,
+                           total_row=total_row,
+                           publishers_data=publishers_data,
+                           action_publisher_data=action_publisher_data,
+                           top_20_action_games=top_20_action_games)
 
 @app.route('/analysis')
 def analysis():

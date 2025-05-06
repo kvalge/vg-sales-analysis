@@ -15,7 +15,6 @@
                         <th>JP Sales</th>
                         <th>Other Sales</th>
                         <th>Global Sales</th>
-                        <th>Total Sales</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,25 +26,61 @@
                             <td>{{ row['JP Sales'] }}</td>
                             <td>{{ row['Other Sales'] }}</td>
                             <td>{{ row['Global Sales'] }}</td>
-                            <td>{{ row['Total Games'] }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
-            <tfoot>
-    <tr style="font-weight: bold;">
-        <td>{{ total_row['Year'] }}</td>
-        <td>{{ total_row['NA Sales'] }}</td>
-        <td>{{ total_row['EU Sales'] }}</td>
-        <td>{{ total_row['JP Sales'] }}</td>
-        <td>{{ total_row['Other Sales'] }}</td>
-        <td>{{ total_row['Global Sales'] }}</td>
-        <td>{{ total_row['Total Games'] }}</td>
-    </tr>
-</tfoot>
+                <tfoot>
+                    <tr style="font-weight: bold;">
+                        <td>{{ total_row['Year'] }}</td>
+                        <td>{{ total_row['NA Sales'] }}</td>
+                        <td>{{ total_row['EU Sales'] }}</td>
+                        <td>{{ total_row['JP Sales'] }}</td>
+                        <td>{{ total_row['Other Sales'] }}</td>
+                        <td>{{ total_row['Global Sales'] }}</td>
+                    </tr>
+                </tfoot>
             </table>
             <br>
             <img src="{{ url_for('static', filename='charts/sales_by_year.png') }}" alt="Sales by Year">
             <img src="{{ url_for('static', filename='charts/sales_by_publisher.png') }}" alt="Sales by Publisher">
+            <img src="{{ url_for('static', filename='charts/sales_by_genre.png') }}" alt="Sales by Genre">
+            <img src="{{ url_for('static', filename='charts/na_sales_by_genre_top7.png') }}" alt="Sales by Genre">
         </div>
+        <h2>Top 10 Action Genre Publishers by North America Sales</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Publisher</th>
+                    <th>NA Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in publishers_data %}
+                    <tr>
+                        <td>{{ row['Publisher'] }}</td>
+                        <td>{{ row['NA Sales'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2>Top 20 Action Games by North America Sales</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Publisher</th>
+                    <th>Game</th>
+                    <th>NA Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in top_20_action_games %}
+                    <tr>
+                        <td>{{ row['Publisher'] }}</td>
+                        <td>{{ row['Name'] }}</td>
+                        <td>{{ row['NA Sales'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}

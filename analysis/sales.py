@@ -22,3 +22,46 @@ def sales_by_publisher():
     sales = sales.round(2)
     top_sales = sales.sort_values(by='Global Sales', ascending=False).head(10)
     return top_sales.reset_index().to_dict(orient='records')
+
+
+def sales_by_genre():
+    sales = data.groupby('Genre')[['NA Sales', 'EU Sales', 'JP Sales', 'Other Sales', 'Global Sales']].sum()
+    sales = sales.round(2)
+    top_sales = sales.sort_values(by='Global Sales', ascending=False)
+    return top_sales.reset_index().to_dict(orient='records')
+
+
+def get_na_sales_by_genre_over_time():
+    grouped = data.groupby(['Year', 'Genre'])['NA Sales'].sum().unstack().fillna(0)
+    grouped = grouped.round(2)
+    return grouped
+
+
+def top_publishers_action_na_sales():
+    filtered_data = data[data['Genre'] == 'Action']
+    sales = (
+        filtered_data.groupby('Publisher')['NA Sales']
+        .sum()
+        .sort_values(ascending=False)
+        .head(10)
+        .round(2)
+    )
+
+    sales_data = sales.reset_index()
+    sales_data.columns = ['Publisher', 'NA Sales']
+    return sales_data.to_dict(orient='records')
+
+
+def top_20_action_games_na_sales():
+    filtered_data = data[data['Genre'] == 'Action']
+
+    top_20 = (
+        filtered_data
+        .groupby(['Name', 'Publisher'], as_index=False)['NA Sales']
+        .sum()
+        .sort_values(by='NA Sales', ascending=False)
+        .head(20)
+        .round(2)
+    )
+
+    return top_20.to_dict(orient='records')

@@ -94,7 +94,6 @@ def get_sales_by_publisher_barchart():
     width = 0.15
     plt.figure(figsize=(10, 6))
 
-    # Assigning custom colors to each bar
     plt.bar([i - 2 * width for i in x], sales['Global Sales'], width=width, label='Global Sales', color='silver')
     plt.bar([i - width for i in x], sales['NA Sales'], width=width, label='NA Sales', color='darkblue')
     plt.bar(x, sales['EU Sales'], width=width, label='EU Sales', color='firebrick')
@@ -109,6 +108,57 @@ def get_sales_by_publisher_barchart():
     plt.tight_layout()
 
     plt.savefig('static/charts/sales_by_publisher.png')
+    plt.close()
+
+def get_sales_by_genre_barchart():
+    sales = data.groupby('Genre')[['NA Sales', 'EU Sales', 'JP Sales', 'Other Sales', 'Global Sales']].sum()
+    sales = sales.round(2)
+    sales = sales.sort_values(by='Global Sales', ascending=False)
+
+    genres = sales.index.tolist()
+    x = range(len(genres))
+
+    width = 0.15
+    plt.figure(figsize=(10, 6))
+
+    plt.bar([i - 2 * width for i in x], sales['Global Sales'], width=width, label='Global Sales', color='silver')
+    plt.bar([i - width for i in x], sales['NA Sales'], width=width, label='NA Sales', color='darkblue')
+    plt.bar(x, sales['EU Sales'], width=width, label='EU Sales', color='firebrick')
+    plt.bar([i + width for i in x], sales['JP Sales'], width=width, label='JP Sales', color='orange')
+    plt.bar([i + 2 * width for i in x], sales['Other Sales'], width=width, label='Other Sales', color='gold')
+
+    plt.xticks(x, genres, rotation=45, ha='right')
+    plt.xlabel('Genre')
+    plt.ylabel('Sales (in millions)')
+    plt.title('Genres by Sales')
+    plt.legend()
+    plt.tight_layout()
+
+    plt.savefig('static/charts/sales_by_genre.png')
+    plt.close()
+
+
+def na_sales_by_genre_over_time_top7_barchart():
+    total_sales = data.groupby('Genre')['NA Sales'].sum().sort_values(ascending=False)
+    top_genres = total_sales.head(7).index.tolist()
+
+    filtered_data = data[data['Genre'].isin(top_genres)]
+    sales = filtered_data.groupby(['Year', 'Genre'])['NA Sales'].sum().unstack().fillna(0)
+    sales = sales.round(2)
+
+    colors = ['darkblue', 'firebrick', 'orange', 'darkgreen', 'purple', 'teal', 'gold']
+
+    plt.figure(figsize=(12, 7))
+    for genre, color in zip(sales.columns, colors):
+        plt.plot(sales.index, sales[genre], label=genre, color=color)
+
+    plt.xlabel('Year')
+    plt.ylabel('NA Sales (millions)')
+    plt.title('North America Sales by Top 7 Genres Over Time')
+    plt.legend(loc='upper right', fontsize='small')
+    plt.tight_layout()
+
+    plt.savefig('static/charts/na_sales_by_genre_top7.png')
     plt.close()
 
 

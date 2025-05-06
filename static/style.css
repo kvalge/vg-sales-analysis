@@ -98,12 +98,13 @@ h2 {
     margin-bottom: 30px;
 }
 
-img{
+img {
+    max-width: 100%;
+    height: auto;
     margin-bottom: 30px;
 }
 
 pre {
-    max-width: 110%;
     border-radius: 5px;
     font-size: 12px;
 }
@@ -115,6 +116,6 @@ table {
 
 th, td {
     border: black solid 1px;
-    padding: 3px;
+    padding: 5px;
     text-align: center;
 }
