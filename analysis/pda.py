@@ -16,6 +16,13 @@ def get_info():
 def get_describe():
     return data.describe(include='all').transpose().to_dict(orient='index')
 
+def get_head():
+    df = load_data()
+    buffer = StringIO()
+    buffer.write(df.head().to_string())
+    head_str = buffer.getvalue()
+    return head_str.splitlines()
+
 
 
 
