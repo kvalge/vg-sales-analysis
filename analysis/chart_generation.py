@@ -62,27 +62,31 @@ def get_publisher_histogram():
 
 
 def get_sales_by_year_linechart():
-    sales = data.groupby('Year')[['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales', 'Global_Sales']].sum()
+    sales = data.groupby('Year')[['NA Sales', 'EU Sales', 'JP Sales', 'Other Sales', 'Global Sales']].sum()
     sales = sales.round(2)
 
     plt.figure(figsize=(10, 6))
-    for column in sales.columns:
-        plt.plot(sales.index, sales[column], label=column)
+    plt.plot(sales.index, sales['NA Sales'], label='NA Sales', color='darkblue')
+    plt.plot(sales.index, sales['EU Sales'], label='EU Sales', color='firebrick')
+    plt.plot(sales.index, sales['JP Sales'], label='JP Sales', color='orange')
+    plt.plot(sales.index, sales['Other Sales'], label='Other Sales', color='gold')
+    plt.plot(sales.index, sales['Global Sales'], label='Global Sales', color='silver')
 
     plt.xlabel('Year')
     plt.ylabel('Sales (in millions)')
     plt.title('Sales by Year')
     plt.legend()
 
+    plt.xticks(sales.index, rotation=45, ha='right')
     plt.tight_layout()
 
     plt.savefig('static/charts/sales_by_year.png')
     plt.close()
 
 def get_sales_by_publisher_barchart():
-    sales = data.groupby('Publisher')[['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales', 'Global_Sales']].sum()
+    sales = data.groupby('Publisher')[['NA Sales', 'EU Sales', 'JP Sales', 'Other Sales', 'Global Sales']].sum()
     sales = sales.round(2)
-    sales = sales.sort_values(by='Global_Sales', ascending=False).head(10)
+    sales = sales.sort_values(by='Global Sales', ascending=False).head(10)
 
     publishers = sales.index.tolist()
     x = range(len(publishers))
@@ -90,12 +94,12 @@ def get_sales_by_publisher_barchart():
     width = 0.15
     plt.figure(figsize=(10, 6))
 
-    # Global Sales on esimene (nihke vasakule 2x)
-    plt.bar([i - 2 * width for i in x], sales['Global_Sales'], width=width, label='Global Sales')
-    plt.bar([i - width for i in x], sales['NA_Sales'], width=width, label='NA Sales')
-    plt.bar(x, sales['EU_Sales'], width=width, label='EU Sales')
-    plt.bar([i + width for i in x], sales['JP_Sales'], width=width, label='JP Sales')
-    plt.bar([i + 2 * width for i in x], sales['Other_Sales'], width=width, label='Other Sales')
+    # Assigning custom colors to each bar
+    plt.bar([i - 2 * width for i in x], sales['Global Sales'], width=width, label='Global Sales', color='silver')
+    plt.bar([i - width for i in x], sales['NA Sales'], width=width, label='NA Sales', color='darkblue')
+    plt.bar(x, sales['EU Sales'], width=width, label='EU Sales', color='firebrick')
+    plt.bar([i + width for i in x], sales['JP Sales'], width=width, label='JP Sales', color='orange')
+    plt.bar([i + 2 * width for i in x], sales['Other Sales'], width=width, label='Other Sales', color='gold')
 
     plt.xticks(x, publishers, rotation=45, ha='right')
     plt.xlabel('Publisher')
@@ -106,4 +110,6 @@ def get_sales_by_publisher_barchart():
 
     plt.savefig('static/charts/sales_by_publisher.png')
     plt.close()
+
+
 

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}PDA{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Exploratory Data Analysis</h2>
+        <a class="link" href="{{ url_for('info') }}">Info</a>
+        <div>
+            <p>No of rows: {{ shape_data.rows }}</p>
+            <p>No of columns: {{ shape_data.columns }}</p>
+        </div>
+        <div>
+            <p>No of unique game names: {{ unique_counts['Name'] }}</p>
+            <p>No of unique platforms: {{ unique_counts['Platform'] }}</p>
+            <p>No of unique genres: {{ unique_counts['Genre'] }}</p>
+            <p>No of unique publishers: {{ unique_counts['Publisher'] }}</p>
+        </div>
+        <h2>Column Description</h2>
+        <div>
+            <ul>
+                <li><strong>Name:</strong> The game's name</li>
+                <li><strong>Platform:</strong> Platform of the game's release (i.e. PC, PS4, etc.)</li>
+                <li><strong>Year:</strong> Year of the game's release</li>
+                <li><strong>Genre:</strong> Genre of the game</li>
+                <li><strong>Publisher:</strong> Publisher of the game</li>
+                <li><strong>NA Sales:</strong> Sales in North America (in millions)</li>
+                <li><strong>EU Sales:</strong> Sales in Europe (in millions)</li>
+                <li><strong>JP Sales:</strong> Sales in Japan (in millions)</li>
+                <li><strong>Other Sales:</strong> Sales in the rest of the world (in millions)</li>
+                <li><strong>Global Sales:</strong> Total worldwide sales.</li>
+            </ul>
+        </div>
+        <h2>Summary</h2>
+        <div class="describe-container">
+            {% for column, stats in describe_data.items() %}
+                <div class="describe-column">
+                    <h3>{{ column }}</h3>
+                    <ul>
+                        {% for stat_name, value in stats.items() %}
+                            <li><strong>{{ stat_name }}:</strong> {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

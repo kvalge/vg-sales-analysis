@@ -9,7 +9,7 @@ body, html {
 }
 
 .container {
-    width: 85%;
+    width: 82%;
     padding: 20px;
     display: flex;
     flex-direction: column;

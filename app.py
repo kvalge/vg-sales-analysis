@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 
 from analysis.sales import (sales_by_year)
-from analysis.pda import (get_shape, get_info, get_head, get_describe)
+from analysis.eda import (get_shape, get_info, get_head, get_describe, get_unique_counts)
 from analysis.chart_generation import *
 
 app = Flask(__name__)
@@ -12,11 +12,13 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/pda')
-def pda():
+@app.route('/eda')
+def eda():
+    unique_counts = get_unique_counts()
     shape_data = get_shape()
     describe_data = get_describe()
-    return render_template('pda.html',
+    return render_template('eda.html',
+                           unique_counts=unique_counts,
                            shape_data=shape_data,
                            describe_data=describe_data)
 
@@ -39,10 +41,10 @@ def graphs():
 
 @app.route('/sales')
 def sales():
-    sales_data = sales_by_year()
+    sales_data, total_row = sales_by_year()
     get_sales_by_year_linechart()
     get_sales_by_publisher_barchart()
-    return render_template('sales.html', sales_data=sales_data)
+    return render_template('sales.html', sales_data=sales_data, total_row=total_row)
 
 
 @app.route('/analysis')

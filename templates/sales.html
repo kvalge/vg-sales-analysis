@@ -15,20 +15,33 @@
                         <th>JP Sales</th>
                         <th>Other Sales</th>
                         <th>Global Sales</th>
+                        <th>Total Sales</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for row in sales_data %}
                         <tr>
                             <td>{{ row['Year'] }}</td>
-                            <td>{{ row['NA_Sales'] }}</td>
-                            <td>{{ row['EU_Sales'] }}</td>
-                            <td>{{ row['JP_Sales'] }}</td>
-                            <td>{{ row['Other_Sales'] }}</td>
-                            <td>{{ row['Global_Sales'] }}</td>
+                            <td>{{ row['NA Sales'] }}</td>
+                            <td>{{ row['EU Sales'] }}</td>
+                            <td>{{ row['JP Sales'] }}</td>
+                            <td>{{ row['Other Sales'] }}</td>
+                            <td>{{ row['Global Sales'] }}</td>
+                            <td>{{ row['Total Games'] }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
+            <tfoot>
+    <tr style="font-weight: bold;">
+        <td>{{ total_row['Year'] }}</td>
+        <td>{{ total_row['NA Sales'] }}</td>
+        <td>{{ total_row['EU Sales'] }}</td>
+        <td>{{ total_row['JP Sales'] }}</td>
+        <td>{{ total_row['Other Sales'] }}</td>
+        <td>{{ total_row['Global Sales'] }}</td>
+        <td>{{ total_row['Total Games'] }}</td>
+    </tr>
+</tfoot>
             </table>
             <br>
             <img src="{{ url_for('static', filename='charts/sales_by_year.png') }}" alt="Sales by Year">

@@ -9,5 +9,8 @@ def load_data():
     df = df.drop(columns=['Rank'])
     df = df.dropna()
     df['Year'] = pd.to_datetime(df['Year'], format='%Y').dt.year
+    df = df[df['Year'] <= 2016]
+
+    df.columns = df.columns.str.replace('_', ' ')
 
     return df
