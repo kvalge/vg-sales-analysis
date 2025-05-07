@@ -1,10 +1,52 @@
 {% extends 'base.html' %}
-
 {% block title %}Analysis{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h2>Analysis</h2>
+<div class="container">
+    <h1>North America Sales 2006–2011 vs 2012–2016</h1>
 
+    <div class="analysis-row">
+        <div class="analysis-table">
+            <h3>Top 7 Genres (2006–2011)</h3>
+            <table>
+                <tr><th>Genre</th><th>NA Sales</th></tr>
+                {% for row in genres_2006_2011 %}
+                    <tr><td>{{ row['Genre'] }}</td><td>{{ row['NA Sales'] }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="analysis-table">
+            <h3>Top 7 Genres (2012–2016)</h3>
+            <table>
+                <tr><th>Genre</th><th>NA Sales</th></tr>
+                {% for row in genres_2012_2016 %}
+                    <tr><td>{{ row['Genre'] }}</td><td>{{ row['NA Sales'] }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
+
+    <div class="analysis-row">
+        <div class="analysis-table">
+            <h3>Top 7 Publishers (2006–2011)</h3>
+            <table>
+                <tr><th>Publisher</th><th>NA Sales</th></tr>
+                {% for row in publishers_2006_2011 %}
+                    <tr><td>{{ row['Publisher'] }}</td><td>{{ row['NA Sales'] }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="analysis-table">
+            <h3>Top 7 Publishers (2012–2016)</h3>
+            <table>
+                <tr><th>Publisher</th><th>NA Sales</th></tr>
+                {% for row in publishers_2012_2016 %}
+                    <tr><td>{{ row['Publisher'] }}</td><td>{{ row['NA Sales'] }}</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

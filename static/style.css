@@ -119,3 +119,16 @@ th, td {
     padding: 5px;
     text-align: center;
 }
+
+.analysis-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 40px;
+}
+
+.analysis-table {
+    flex: 1;
+    padding: 10px;
+}

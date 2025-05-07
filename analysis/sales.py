@@ -39,13 +39,12 @@ def na_sales_by_genre_over_time():
 
 def na_sales_by_top_publishers_action_games():
     filtered_data = data[data['Genre'] == 'Action']
-    sales = (
-        filtered_data.groupby('Publisher')['NA Sales']
-        .sum()
-        .sort_values(ascending=False)
-        .head(10)
-        .round(2)
-    )
+    sales = (filtered_data.groupby('Publisher')['NA Sales']
+             .sum()
+             .sort_values(ascending=False)
+             .head(10)
+             .round(2)
+             )
 
     sales_data = sales.reset_index()
     sales_data.columns = ['Publisher', 'NA Sales']
@@ -55,27 +54,22 @@ def na_sales_by_top_publishers_action_games():
 def na_sales_by_top_20_action_games():
     filtered_data = data[data['Genre'] == 'Action']
 
-    top_20 = (
-        filtered_data
-        .groupby(['Name', 'Publisher'], as_index=False)['NA Sales']
-        .sum()
-        .sort_values(by='NA Sales', ascending=False)
-        .head(20)
-        .round(2)
-    )
+    top_20 = (filtered_data
+              .groupby(['Name', 'Publisher'], as_index=False)['NA Sales']
+              .sum()
+              .sort_values(by='NA Sales', ascending=False)
+              .head(20)
+              .round(2)
+              )
 
     return top_20.to_dict(orient='records')
 
 
-def na_sales_by_genre_2006_2011():
-    df = data[(data['Year'] >= 2006) & (data['Year'] <= 2011)]
-    by_genre_from_2006_to_2011 = (
-        df
-        .groupby(['Genre'], as_index=False)['NA Sales']
-        .sum()
-        .sort_values(by='NA Sales', ascending=False)
-        .round(2)
-    )
-    return by_genre_from_2006_to_2011.to_dict(orient='records')
-
-
+def na_sales_by_genre():
+    by_genre = (data
+                                  .groupby(['Genre'], as_index=False)['NA Sales']
+                                  .sum()
+                                  .sort_values(by='NA Sales', ascending=False)
+                                  .round(2)
+                                  )
+    return by_genre.to_dict(orient='records')
