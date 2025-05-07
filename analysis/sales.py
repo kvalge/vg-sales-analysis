@@ -31,13 +31,13 @@ def sales_by_genre():
     return top_sales.reset_index().to_dict(orient='records')
 
 
-def get_na_sales_by_genre_over_time():
+def na_sales_by_genre_over_time():
     grouped = data.groupby(['Year', 'Genre'])['NA Sales'].sum().unstack().fillna(0)
     grouped = grouped.round(2)
     return grouped
 
 
-def top_publishers_action_na_sales():
+def na_sales_by_top_publishers_action_games():
     filtered_data = data[data['Genre'] == 'Action']
     sales = (
         filtered_data.groupby('Publisher')['NA Sales']
@@ -52,7 +52,7 @@ def top_publishers_action_na_sales():
     return sales_data.to_dict(orient='records')
 
 
-def top_20_action_games_na_sales():
+def na_sales_by_top_20_action_games():
     filtered_data = data[data['Genre'] == 'Action']
 
     top_20 = (
@@ -65,3 +65,17 @@ def top_20_action_games_na_sales():
     )
 
     return top_20.to_dict(orient='records')
+
+
+def na_sales_by_genre_2006_2011():
+    df = data[(data['Year'] >= 2006) & (data['Year'] <= 2011)]
+    by_genre_from_2006_to_2011 = (
+        df
+        .groupby(['Genre'], as_index=False)['NA Sales']
+        .sum()
+        .sort_values(by='NA Sales', ascending=False)
+        .round(2)
+    )
+    return by_genre_from_2006_to_2011.to_dict(orient='records')
+
+

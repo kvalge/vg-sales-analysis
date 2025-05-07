@@ -4,26 +4,22 @@
 
 {% block content %}
     <div class="container">
-        <h2>Frequency of Categorical Data</h2>
+        <h1>Frequency of Categorical Data</h1>
         <div class="image-center-wrapper">
             <img src="{{ url_for('static', filename='charts/names_histogram.png') }}"
-                 alt="Game names histogram"
-                 style="max-width: 100%; height: auto;">
+                 alt="Game names histogram">
         </div>
         <div class="image-center-wrapper">
             <img src="{{ url_for('static', filename='charts/platforms_histogram.png') }}"
-                 alt="Platforms histogram"
-                 style="max-width: 100%; height: auto;">
+                 alt="Platforms histogram">
         </div>
         <div class="image-center-wrapper">
             <img src="{{ url_for('static', filename='charts/genres_histogram.png') }}"
-                 alt="Genres histogram"
-                 style="max-width: 100%; height: auto;">
+                 alt="Genres histogram">
         </div>
         <div class="image-center-wrapper">
             <img src="{{ url_for('static', filename='charts/publishers_histogram.png') }}"
-                 alt="Publishers histogram"
-                 style="max-width: 100%; height: auto;">
+                 alt="Publishers histogram">
         </div>
     </div>
 {% endblock %}

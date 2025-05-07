@@ -4,6 +4,7 @@
 
 {% block content %}
     <div class="container">
+        <h1>Sales Info</h1>
         <h2>Sales by Year</h2>
         <div class="image-center-wrapper">
             <table>
@@ -42,10 +43,29 @@
             </table>
             <br>
             <img src="{{ url_for('static', filename='charts/sales_by_year.png') }}" alt="Sales by Year">
+            <h2>Sales by Publisher</h2>
             <img src="{{ url_for('static', filename='charts/sales_by_publisher.png') }}" alt="Sales by Publisher">
+            <h2>Sales by Genre</h2>
             <img src="{{ url_for('static', filename='charts/sales_by_genre.png') }}" alt="Sales by Genre">
             <img src="{{ url_for('static', filename='charts/na_sales_by_genre_top7.png') }}" alt="Sales by Genre">
         </div>
+        <h2>Genres by North America Sales From 2006 To 2011</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Genre</th>
+                    <th>NA Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in na_action_from_2006_to_2011 %}
+                    <tr>
+                        <td>{{ row['Genre'] }}</td>
+                        <td>{{ row['NA Sales'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <h2>Top 10 Action Genre Publishers by North America Sales</h2>
         <table>
             <thead>
@@ -82,5 +102,6 @@
                 {% endfor %}
             </tbody>
         </table>
+
     </div>
 {% endblock %}
