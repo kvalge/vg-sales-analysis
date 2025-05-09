@@ -1,8 +1,8 @@
 from flask import Flask, render_template
 
 from analysis.analysis import *
-from analysis.sales import *
-from analysis.eda import (get_shape, get_info, get_head, get_describe, get_unique_counts)
+from analysis.eda import *
+from analysis.summary import (get_shape, get_info, get_head, get_describe, get_unique_counts)
 from analysis.chart_generation import *
 
 app = Flask(__name__)
@@ -13,12 +13,12 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/eda')
-def eda():
+@app.route('/summary')
+def summary():
     unique_counts = get_unique_counts()
     shape_data = get_shape()
     describe_data = get_describe()
-    return render_template('eda.html',
+    return render_template('summary.html',
                            unique_counts=unique_counts,
                            shape_data=shape_data,
                            describe_data=describe_data)
@@ -40,8 +40,8 @@ def graphs():
     return render_template('charts.html')
 
 
-@app.route('/sales')
-def sales():
+@app.route('/eda')
+def eda():
     sales_data, total_row = sales_by_year()
     publishers_data = na_sales_by_top_publishers_action_games()
     action_publisher_data = na_sales_by_top_20_action_games()
@@ -53,7 +53,7 @@ def sales():
     get_sales_by_genre_barchart()
     na_sales_by_genre_over_time_top7_barchart()
 
-    return render_template('sales.html',
+    return render_template('eda.html',
                            sales_data=sales_data,
                            total_row=total_row,
                            publishers_data=publishers_data,
@@ -72,6 +72,12 @@ def analysis():
         genres_2012_2016=genres_2012_2016,
         publishers_2006_2011=publishers_2006_2011,
         publishers_2012_2016=publishers_2012_2016,
+    )
+
+@app.route('/models')
+def models():
+    return render_template(
+        'models.html'
     )
 
 
