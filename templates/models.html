@@ -1,8 +1,179 @@
 {% extends 'base.html' %}
-{% block title %}Analysis{% endblock %}
+{% block title %}Models{% endblock %}
 
 {% block content %}
-<div class="container">
+    <div class="container">
+    <h1>North America Sales Prediction</h1>
+        <h2>What Features Predict Game Sales</h2>
 
+        <div class="analysis-row">
+            <div class="analysis-table">
+                <h3>2006–2011</h3>
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Importance</th>
+                    </tr>
+                    {% for feature, importance in combined_2006_2011 %}
+                        <tr>
+                            <td>{{ feature }}</td>
+                            <td>{{ importance }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <div class="analysis-table">
+                <h3>2012–2016</h3>
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Importance</th>
+                    </tr>
+                    {% for feature, importance in combined_2012_2016 %}
+                        <tr>
+                            <td>{{ feature }}</td>
+                            <td>{{ importance }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <h2>High Seller Classifier Results (Sales > 0.2 M)</h2>
+        <div class="analysis-row">
+            <div class="analysis-table">
+                <h3>2006–2011</h3>
+                <ul>
+                    <li>Accuracy: {{ classifier_2006_2011.accuracy }}</li>
+                    <li>Precision: {{ classifier_2006_2011.precision }}</li>
+                    <li>Recall: {{ classifier_2006_2011.recall }}</li>
+                    <li>F1 Score: {{ classifier_2006_2011.f1_score }}</li>
+                    <li>Confusion Matrix:
+                        <pre>{{ classifier_2006_2011.conf_matrix }}</pre>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="analysis-table">
+                <h3>2012–2016</h3>
+                <ul>
+                    <li>Accuracy: {{ classifier_2012_2016.accuracy }}</li>
+                    <li>Precision: {{ classifier_2012_2016.precision }}</li>
+                    <li>Recall: {{ classifier_2012_2016.recall }}</li>
+                    <li>F1 Score: {{ classifier_2012_2016.f1_score }}</li>
+                    <li>Confusion Matrix:
+                        <pre>{{ classifier_2012_2016.conf_matrix }}</pre>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+<h2>Predict if a Game's Sales Exceed 0.2 M</h2>
+<div class="prediction-form-container">
+    <form method="POST" id="prediction-form">
+        <div class="form-group">
+            <label for="genre">Genre:</label>
+            <select name="genre" id="genre" onchange="updatePublishers()">
+                <option value="">Select a genre</option>
+                {% for genre in genres %}
+                    <option value="{{ genre }}">{{ genre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="publisher">Publisher:</label>
+            <select name="publisher" id="publisher" onchange="updatePlatforms()" disabled>
+                <option value="">Select a publisher</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="platform">Platform:</label>
+            <select name="platform" id="platform" onchange="updateSubmitButton()" disabled>
+                <option value="">Select a platform</option>
+            </select>
+        </div>
+
+        <button type="submit" id="submit-btn" disabled>Predict Best Seller</button>
+    </form>
+
+    {% if prediction_result is not none %}
+        <div class="prediction-result">
+            <p><strong>Prediction:</strong> Will this be a Best Seller? → <span>{{ prediction_result }}</span></p>
+        </div>
+    {% endif %}
 </div>
+
+<script>
+const publishersByGenre = JSON.parse('{{ publishers_by_genre|tojson|safe }}');
+const platformsByGenrePublisher = JSON.parse('{{ platforms_by_genre_publisher|tojson|safe }}');
+
+function updateSubmitButton() {
+    const genre = document.getElementById('genre').value;
+    const publisher = document.getElementById('publisher').value;
+    const platform = document.getElementById('platform').value;
+    const submitBtn = document.getElementById('submit-btn');
+    
+    submitBtn.disabled = !(genre && publisher && platform);
+}
+
+function updatePublishers() {
+    const genre = document.getElementById('genre').value;
+    const publisherSelect = document.getElementById('publisher');
+    const platformSelect = document.getElementById('platform');
+    const submitBtn = document.getElementById('submit-btn');
+
+    publisherSelect.innerHTML = '<option value="">Select a publisher</option>';
+    platformSelect.innerHTML = '<option value="">Select a platform</option>';
+    platformSelect.disabled = true;
+    submitBtn.disabled = true;
+    
+    if (genre) {
+        const publishers = publishersByGenre[genre];
+        publishers.forEach(publisher => {
+            const option = document.createElement('option');
+            option.value = publisher;
+            option.textContent = publisher;
+            publisherSelect.appendChild(option);
+        });
+        publisherSelect.disabled = false;
+    } else {
+        publisherSelect.disabled = true;
+    }
+}
+
+function updatePlatforms() {
+    const genre = document.getElementById('genre').value;
+    const publisher = document.getElementById('publisher').value;
+    const platformSelect = document.getElementById('platform');
+    const submitBtn = document.getElementById('submit-btn');
+
+    platformSelect.innerHTML = '<option value="">Select a platform</option>';
+    submitBtn.disabled = true;
+    
+    if (publisher) {
+        const platforms = platformsByGenrePublisher[genre][publisher];
+        platforms.forEach(platform => {
+            const option = document.createElement('option');
+            option.value = platform;
+            option.textContent = platform;
+            platformSelect.appendChild(option);
+        });
+        platformSelect.disabled = false;
+    } else {
+        platformSelect.disabled = true;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const genre = document.getElementById('genre').value;
+    if (genre) {
+        updatePublishers();
+    }
+});
+</script>
+
+    </div>
 {% endblock %}
