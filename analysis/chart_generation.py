@@ -3,62 +3,61 @@ import matplotlib.pyplot as plt
 
 data = load_data()
 
-def get_name_histogram():
-    counts = data['Name'].value_counts().head(30)
-    plt.figure(figsize=(12, 8))
+
+def generate_histogram(column, title, xlabel, ylabel, top_n=None, figsize=(12, 8), color='#89899a', width=0.9):
+    counts = data[column].value_counts()
+    if top_n:
+        counts = counts.head(top_n)
+
+    plt.figure(figsize=figsize)
     names = counts.index
     counts = counts.values
-    plt.bar(names, counts, color='#89899a', width=0.9)
-    plt.title('Top 30 Game Frequency')
-    plt.xlabel('Name')
-    plt.ylabel('Frequency')
+    plt.bar(names, counts, color=color, width=width)
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.savefig('static/charts/names_histogram.png')
+    plt.savefig(f'static/charts/{column.lower()}_histogram.png')
     plt.close()
+
+
+def get_name_histogram():
+    generate_histogram(
+        column='Name',
+        title='Top 30 Game Frequency',
+        xlabel='Name',
+        ylabel='Frequency',
+        top_n=30
+    )
 
 
 def get_platform_histogram():
-    counts = data['Platform'].value_counts()
-    plt.figure(figsize=(12, 8))
-    names = counts.index
-    counts = counts.values
-    plt.bar(names, counts, color='#89899a', width=0.9)
-    plt.title('Platform Frequency')
-    plt.xlabel('Platform')
-    plt.ylabel('Frequency')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    plt.savefig('static/charts/platforms_histogram.png')
-    plt.close()
+    generate_histogram(
+        column='Platform',
+        title='Platform Frequency',
+        xlabel='Platform',
+        ylabel='Frequency'
+    )
+
 
 def get_genre_histogram():
-    counts = data['Genre'].value_counts()
-    plt.figure(figsize=(12, 8))
-    names = counts.index
-    counts = counts.values
-    plt.bar(names, counts, color='#89899a', width=0.9)
-    plt.title('Genre Frequency')
-    plt.xlabel('Genre')
-    plt.ylabel('Frequency')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    plt.savefig('static/charts/genres_histogram.png')
-    plt.close()
+    generate_histogram(
+        column='Genre',
+        title='Genre Frequency',
+        xlabel='Genre',
+        ylabel='Frequency'
+    )
+
 
 def get_publisher_histogram():
-    counts = data['Publisher'].value_counts().head(30)
-    plt.figure(figsize=(12, 8))
-    names = counts.index
-    counts = counts.values
-    plt.bar(names, counts, color='#89899a', width=0.9)
-    plt.title('Top 30 Publisher Frequency')
-    plt.xlabel('Publisher')
-    plt.ylabel('Frequency')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    plt.savefig('static/charts/publishers_histogram.png')
-    plt.close()
+    generate_histogram(
+        column='Publisher',
+        title='Top 30 Publisher Frequency',
+        xlabel='Publisher',
+        ylabel='Frequency',
+        top_n=30
+    )
 
 
 def get_sales_by_year_linechart():
@@ -82,6 +81,7 @@ def get_sales_by_year_linechart():
 
     plt.savefig('static/charts/sales_by_year.png')
     plt.close()
+
 
 def get_sales_by_publisher_barchart():
     sales = data.groupby('Publisher')[['NA Sales', 'EU Sales', 'JP Sales', 'Other Sales', 'Global Sales']].sum()
@@ -109,6 +109,7 @@ def get_sales_by_publisher_barchart():
 
     plt.savefig('static/charts/sales_by_publisher.png')
     plt.close()
+
 
 def get_sales_by_genre_barchart():
     sales = data.groupby('Genre')[['NA Sales', 'EU Sales', 'JP Sales', 'Other Sales', 'Global Sales']].sum()
@@ -160,6 +161,3 @@ def na_sales_by_genre_over_time_top7_barchart():
 
     plt.savefig('static/charts/na_sales_by_genre_top7.png')
     plt.close()
-
-
-

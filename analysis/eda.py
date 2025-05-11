@@ -67,9 +67,9 @@ def na_sales_by_top_20_action_games():
 
 def na_sales_by_genre():
     by_genre = (data
-                                  .groupby(['Genre'], as_index=False)['NA Sales']
-                                  .sum()
-                                  .sort_values(by='NA Sales', ascending=False)
-                                  .round(2)
-                                  )
+                .groupby(['Genre'], as_index=False)['NA Sales']
+                .sum()
+                .sort_values(by='NA Sales', ascending=False)
+                .round(2)
+                )
     return by_genre.to_dict(orient='records')

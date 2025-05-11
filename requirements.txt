@@ -1,4 +1,5 @@
-Pandas~=2.2.3
-Flask~=3.1.0
-matplotlib~=3.10.1
+Pandas
+Flask
+matplotlib
 scikit-learn
+seaborn

@@ -1,4 +1,3 @@
-import pandas as pd
 from flask import Flask, render_template, request, jsonify
 
 from analysis.analysis import *
@@ -66,6 +65,7 @@ def eda():
 
 @app.route('/analysis')
 def analysis():
+    save_sales_summary_chart(2006, 2011, 2012, 2016)
     genres_2006_2011, publishers_2006_2011, platforms_2006_2011 = get_sales_data_for_period(2006, 2011)
     genres_2012_2016, publishers_2012_2016, platforms_2012_2016 = get_sales_data_for_period(2012, 2016)
     top_combinations_2006_2011 = top_na_sales_combinations(2006, 2011)
@@ -106,29 +106,25 @@ def models():
     model_2012_2016, encoders_2012_2016, metrics_2012_2016 = prepare_classification_data(2012, 2016)
 
     combined_2006_2011 = zip(['Genre', 'Publisher', 'Platform'],
-                            [round(val, 2) for val in model_2006_2011.feature_importances_])
+                             [round(val, 2) for val in model_2006_2011.feature_importances_])
     combined_2012_2016 = zip(['Genre', 'Publisher', 'Platform'],
-                            [round(val, 2) for val in model_2012_2016.feature_importances_])
+                             [round(val, 2) for val in model_2012_2016.feature_importances_])
 
-    # Get data for 2012-2016 period
     period_data = data[(data['Year'] >= 2012) & (data['Year'] <= 2016)]
-    
-    # Get unique genres
+
     genres = sorted(period_data['Genre'].dropna().unique())
-    
-    # Create dictionary of publishers for each genre
+
     publishers_by_genre = {}
     for genre in genres:
         publishers_by_genre[genre] = sorted(period_data[period_data['Genre'] == genre]['Publisher'].dropna().unique())
-    
-    # Create dictionary of platforms for each genre-publisher combination
+
     platforms_by_genre_publisher = {}
     for genre in genres:
         platforms_by_genre_publisher[genre] = {}
         for publisher in publishers_by_genre[genre]:
             platforms_by_genre_publisher[genre][publisher] = sorted(
-                period_data[(period_data['Genre'] == genre) & 
-                          (period_data['Publisher'] == publisher)]['Platform'].dropna().unique()
+                period_data[(period_data['Genre'] == genre) &
+                            (period_data['Publisher'] == publisher)]['Platform'].dropna().unique()
             )
 
     prediction_result = None
@@ -136,7 +132,7 @@ def models():
         genre = request.form['genre']
         publisher = request.form['publisher']
         platform = request.form['platform']
-        
+
         prediction = get_prediction(model_2012_2016, encoders_2012_2016, genre, publisher, platform)
         prediction_result = 'Yes' if prediction == 1 else 'No'
 

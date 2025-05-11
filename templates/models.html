@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container">
-    <h1>North America Sales Prediction</h1>
+        <h1>North America Sales Prediction</h1>
         <h2>What Features Predict Game Sales</h2>
 
         <div class="analysis-row">
@@ -69,111 +69,112 @@
             </div>
         </div>
 
-<h2>Predict if a Game's Sales Exceed 0.2 M</h2>
-<div class="prediction-form-container">
-    <form method="POST" id="prediction-form">
-        <div class="form-group">
-            <label for="genre">Genre:</label>
-            <select name="genre" id="genre" onchange="updatePublishers()">
-                <option value="">Select a genre</option>
-                {% for genre in genres %}
-                    <option value="{{ genre }}">{{ genre }}</option>
-                {% endfor %}
-            </select>
+        <h2>Predict if a Game's Sales Exceed 0.2 M</h2>
+        <div class="prediction-form-container">
+            <form method="POST" id="prediction-form">
+                <div class="form-group">
+                    <label for="genre">Genre:</label>
+                    <select name="genre" id="genre" onchange="updatePublishers()">
+                        <option value="">Select a genre</option>
+                        {% for genre in genres %}
+                            <option value="{{ genre }}">{{ genre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="publisher">Publisher:</label>
+                    <select name="publisher" id="publisher" onchange="updatePlatforms()" disabled>
+                        <option value="">Select a publisher</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="platform">Platform:</label>
+                    <select name="platform" id="platform" onchange="updateSubmitButton()" disabled>
+                        <option value="">Select a platform</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="submit-btn" disabled>Predict Best Seller</button>
+            </form>
+
+            {% if prediction_result is not none %}
+                <div class="prediction-result">
+                    <p><strong>Prediction:</strong> Will this be a Best Seller? → <span>{{ prediction_result }}</span>
+                    </p>
+                </div>
+            {% endif %}
         </div>
 
-        <div class="form-group">
-            <label for="publisher">Publisher:</label>
-            <select name="publisher" id="publisher" onchange="updatePlatforms()" disabled>
-                <option value="">Select a publisher</option>
-            </select>
-        </div>
+        <script>
+            const publishersByGenre = JSON.parse('{{ publishers_by_genre|tojson|safe }}');
+            const platformsByGenrePublisher = JSON.parse('{{ platforms_by_genre_publisher|tojson|safe }}');
 
-        <div class="form-group">
-            <label for="platform">Platform:</label>
-            <select name="platform" id="platform" onchange="updateSubmitButton()" disabled>
-                <option value="">Select a platform</option>
-            </select>
-        </div>
+            function updateSubmitButton() {
+                const genre = document.getElementById('genre').value;
+                const publisher = document.getElementById('publisher').value;
+                const platform = document.getElementById('platform').value;
+                const submitBtn = document.getElementById('submit-btn');
 
-        <button type="submit" id="submit-btn" disabled>Predict Best Seller</button>
-    </form>
+                submitBtn.disabled = !(genre && publisher && platform);
+            }
 
-    {% if prediction_result is not none %}
-        <div class="prediction-result">
-            <p><strong>Prediction:</strong> Will this be a Best Seller? → <span>{{ prediction_result }}</span></p>
-        </div>
-    {% endif %}
-</div>
+            function updatePublishers() {
+                const genre = document.getElementById('genre').value;
+                const publisherSelect = document.getElementById('publisher');
+                const platformSelect = document.getElementById('platform');
+                const submitBtn = document.getElementById('submit-btn');
 
-<script>
-const publishersByGenre = JSON.parse('{{ publishers_by_genre|tojson|safe }}');
-const platformsByGenrePublisher = JSON.parse('{{ platforms_by_genre_publisher|tojson|safe }}');
+                publisherSelect.innerHTML = '<option value="">Select a publisher</option>';
+                platformSelect.innerHTML = '<option value="">Select a platform</option>';
+                platformSelect.disabled = true;
+                submitBtn.disabled = true;
 
-function updateSubmitButton() {
-    const genre = document.getElementById('genre').value;
-    const publisher = document.getElementById('publisher').value;
-    const platform = document.getElementById('platform').value;
-    const submitBtn = document.getElementById('submit-btn');
-    
-    submitBtn.disabled = !(genre && publisher && platform);
-}
+                if (genre) {
+                    const publishers = publishersByGenre[genre];
+                    publishers.forEach(publisher => {
+                        const option = document.createElement('option');
+                        option.value = publisher;
+                        option.textContent = publisher;
+                        publisherSelect.appendChild(option);
+                    });
+                    publisherSelect.disabled = false;
+                } else {
+                    publisherSelect.disabled = true;
+                }
+            }
 
-function updatePublishers() {
-    const genre = document.getElementById('genre').value;
-    const publisherSelect = document.getElementById('publisher');
-    const platformSelect = document.getElementById('platform');
-    const submitBtn = document.getElementById('submit-btn');
+            function updatePlatforms() {
+                const genre = document.getElementById('genre').value;
+                const publisher = document.getElementById('publisher').value;
+                const platformSelect = document.getElementById('platform');
+                const submitBtn = document.getElementById('submit-btn');
 
-    publisherSelect.innerHTML = '<option value="">Select a publisher</option>';
-    platformSelect.innerHTML = '<option value="">Select a platform</option>';
-    platformSelect.disabled = true;
-    submitBtn.disabled = true;
-    
-    if (genre) {
-        const publishers = publishersByGenre[genre];
-        publishers.forEach(publisher => {
-            const option = document.createElement('option');
-            option.value = publisher;
-            option.textContent = publisher;
-            publisherSelect.appendChild(option);
-        });
-        publisherSelect.disabled = false;
-    } else {
-        publisherSelect.disabled = true;
-    }
-}
+                platformSelect.innerHTML = '<option value="">Select a platform</option>';
+                submitBtn.disabled = true;
 
-function updatePlatforms() {
-    const genre = document.getElementById('genre').value;
-    const publisher = document.getElementById('publisher').value;
-    const platformSelect = document.getElementById('platform');
-    const submitBtn = document.getElementById('submit-btn');
+                if (publisher) {
+                    const platforms = platformsByGenrePublisher[genre][publisher];
+                    platforms.forEach(platform => {
+                        const option = document.createElement('option');
+                        option.value = platform;
+                        option.textContent = platform;
+                        platformSelect.appendChild(option);
+                    });
+                    platformSelect.disabled = false;
+                } else {
+                    platformSelect.disabled = true;
+                }
+            }
 
-    platformSelect.innerHTML = '<option value="">Select a platform</option>';
-    submitBtn.disabled = true;
-    
-    if (publisher) {
-        const platforms = platformsByGenrePublisher[genre][publisher];
-        platforms.forEach(platform => {
-            const option = document.createElement('option');
-            option.value = platform;
-            option.textContent = platform;
-            platformSelect.appendChild(option);
-        });
-        platformSelect.disabled = false;
-    } else {
-        platformSelect.disabled = true;
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const genre = document.getElementById('genre').value;
-    if (genre) {
-        updatePublishers();
-    }
-});
-</script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const genre = document.getElementById('genre').value;
+                if (genre) {
+                    updatePublishers();
+                }
+            });
+        </script>
 
     </div>
 {% endblock %}

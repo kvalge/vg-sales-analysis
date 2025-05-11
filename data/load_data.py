@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 
+
 def load_data():
     base_path = os.path.dirname(__file__)
     file_path = os.path.join(base_path, 'vgsales.csv')
