@@ -43,3 +43,6 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)  
 docker build -t vg-sales-analysis .  
 docker run -p 5000:5000 vg-sales-analysis  
+
+-----------------  
+Cursor claude-3.7-sonnet and ChatGpt GPT-4o assistance is used for code generation 
